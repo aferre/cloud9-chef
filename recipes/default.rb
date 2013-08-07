@@ -16,3 +16,40 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
+
+# install nvm
+include_recipe 'nvm'
+
+execute "apt-get-update" do
+  command "apt-get update"
+  ignore_failure false
+  action :run
+end
+
+# install node.js v0.10.5
+nvm_install node['cloud9']['nvm']['version']  do
+    from_source true
+    alias_as_default true
+    action :create
+    notifies :run, "execute[install sourcemint]"
+end
+
+execute "install sourcemint" do
+	command "nvm use #{node['cloud9']['nvm']['version']}; npm install -g sm"
+	ignore_failure false
+	action :nothing
+end
+
+git node['cloud9']['directory'] do
+  repository node['cloud9']['repository']
+  reference node['cloud9']['reference']
+  action :sync
+  notifies :run, "execute[install cloud9]"
+end
+
+execute "install cloud9" do
+	cwd node['cloud9']['directory']
+	command "sm install"
+	ignore_failure false
+	action :nothing
+end
