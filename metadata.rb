@@ -12,3 +12,4 @@ version          "0.1"
 end
 
 depends "nvm"
+depends "apt"

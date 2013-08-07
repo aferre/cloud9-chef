@@ -17,7 +17,7 @@
 # limitations under the License.
 #
 
-# install nvm
+include_recipe 'apt'
 include_recipe 'nvm'
 
 execute "apt-get-update" do
@@ -26,30 +26,52 @@ execute "apt-get-update" do
   action :run
 end
 
-# install node.js v0.10.5
-nvm_install node['cloud9']['nvm']['version']  do
-    from_source true
-    alias_as_default true
-    action :create
-    notifies :run, "execute[install sourcemint]"
+  # packages.each do |pkg|
+  #   package pkg do
+  #     action [:install, :upgrade]
+  #   end
+  # end
+
+  # package 'libxml2-dev'
+  # package 'apache2-utils'
+  # package 'libssl-dev'
+
+%w{libxml2-dev apache2-utils libssl-dev}.each do |pkg|
+  package pkg do
+    action [:install, :upgrade]
+  end
 end
 
-execute "install sourcemint" do
-	command "nvm use #{node['cloud9']['nvm']['version']}; npm install -g sm"
+nvm_install node['cloud9']['nvm']['version']  do
+    from_source node['nvm']['install_from_sources']
+    alias_as_default node['nvm']['alias_as_default']
+    action :create
+    notifies :run, "bash[install_sourcemint]"
+end
+
+bash "install_sourcemint" do
+	code <<-EOH
+  #{node['nvm']['source']}
+  nvm use #{node['cloud9']['nvm']['version']}
+  npm install -g sm
+  #{node['nvm']['directory']}/#{node['cloud9']['nvm']['version']}/lib/node_modules/sm/bin/sm install-command
+  EOH
+	#command "source npm install -g sm"
 	ignore_failure false
-	action :nothing
+	action :run
 end
 
 git node['cloud9']['directory'] do
   repository node['cloud9']['repository']
   reference node['cloud9']['reference']
+  ignore_failure false
   action :sync
-  notifies :run, "execute[install cloud9]"
+  notifies :run, "execute[install_cloud9]"
 end
 
-execute "install cloud9" do
+execute "install_cloud9" do
 	cwd node['cloud9']['directory']
-	command "sm install"
+	command "#{node['nvm']['directory']}/#{node['cloud9']['nvm']['version']}/lib/node_modules/sm/bin/sm install"
 	ignore_failure false
 	action :nothing
 end
