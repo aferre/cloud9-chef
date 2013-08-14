@@ -56,22 +56,28 @@ bash "install_sourcemint" do
   npm install -g sm
   #{node['nvm']['directory']}/#{node['cloud9']['nvm']['version']}/lib/node_modules/sm/bin/sm install-command
   EOH
-	#command "source npm install -g sm"
 	ignore_failure false
-	action :run
+	action :nothing
 end
 
 git node['cloud9']['directory'] do
   repository node['cloud9']['repository']
-  reference node['cloud9']['reference']
+  revision node['cloud9']['revision']
   ignore_failure false
   action :sync
-  notifies :run, "execute[install_cloud9]"
+  notifies :run, "bash[install_cloud9]"
 end
 
-execute "install_cloud9" do
-	cwd node['cloud9']['directory']
-	command "#{node['nvm']['directory']}/#{node['cloud9']['nvm']['version']}/lib/node_modules/sm/bin/sm install"
-	ignore_failure false
-	action :nothing
+
+bash "install_cloud9" do
+   code <<-EOH
+  #{node['nvm']['source']}
+  nvm use #{node['cloud9']['nvm']['version']}
+  #{node['nvm']['directory']}/#{node['cloud9']['nvm']['version']}/lib/node_modules/sm/bin/sm install
+  EOH
+  cwd "#{node['cloud9']['directory']}"
+  ignore_failure false
+  action :nothing
+retries 2
 end
+
