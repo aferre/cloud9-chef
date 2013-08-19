@@ -52,3 +52,7 @@ If you're not using Git, use the site download subcommand to download the tarbal
     knife cookbook site download COOKBOOK
 
 This creates the COOKBOOK.tar.gz from in the current directory (e.g., `~/chef-repo`). We recommend following a workflow similar to the above for your version control tool.
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/aferre/cloud9-chef/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
