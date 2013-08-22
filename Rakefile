@@ -64,35 +64,56 @@ task :bundle_cookbook, :cookbook do |t, args|
   FileUtils.rm_rf temp_dir
 end
 
-task :default => 'foodcritic'
+def cookbook_metadata
+  metadata = Chef::Cookbook::Metadata.new
+  metadata.from_file 'metadata.rb'
+  metadata
+end
 
-desc "Runs foodcritic linter"
-task :foodcritic do
-  Rake::Task[:prepare_sandbox].execute
-
-  if Gem::Version.new("1.9.2") <= Gem::Version.new(RUBY_VERSION.dup)
-    sh "foodcritic -f any #{sandbox_path}"
+def cookbook_name
+  name = cookbook_metadata.name
+  if name.nil? || name.empty?
+    File.basename(File.dirname(__FILE__))
   else
-    puts "WARN: foodcritic run is skipped as Ruby #{RUBY_VERSION} is < 1.9.2."
+    name
   end
 end
 
-desc "Runs knife cookbook test"
-task :knife do
-  Rake::Task[:prepare_sandbox].execute
+COOKBOOK_NAME = ENV['COOKBOOK_NAME'] || cookbook_name
+FIXTURES_PATH = ENV['FIXTURES_PATH'] || 'fixtures'
+namespace :test do
+ 
+  desc 'Run Knife syntax checks'
+  task :syntax  do
+    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME, '--config', '.knife.rb',
+       '--cookbook-path', FIXTURES_PATH
+  end
 
-  sh "bundle exec knife cookbook test cookbook -c test/.chef/knife.rb -o #{sandbox_path}/../"
+  desc 'Run minitest integration tests with Vagrant'
+  task :integration do
+    # This variable is evaluated by Berksfile and Vagrantfile, and will add
+    # minitest-handler to Chef's run list.
+    ENV['INTEGRATION_TEST'] = '1'
+
+    # Provision VM depending on its state.
+    case `vagrant status`
+    when /The VM is running/ then ['provision']
+    when /To resume this VM/ then ['up', 'provision']
+    else ['up']
+    end.each { |cmd| sh 'vagrant', cmd }
+  end
+
+  desc 'Tear down VM used for integration tests'
+  task :integration_teardown do
+    # Shut VM down unless INTEGRATION_TEARDOWN is set to a different command.
+    sh ENV.fetch('INTEGRATION_TEARDOWN', 'vagrant halt --force')
+  end
+
+  desc 'Run test:syntax, test:lint, test:spec, and test:integration'
+  task :all => [:syntax, :integration, :integration_teardown]
 end
 
-task :prepare_sandbox do
-  files = %w{*.md *.rb attributes definitions libraries files providers recipes resources templates}
+# Aliases for backwards compatibility and convenience
+task :test => 'test:all'
 
-  rm_rf sandbox_path
-  mkdir_p sandbox_path
-  cp_r Dir.glob("{#{files.join(',')}}"), sandbox_path
-end
-
-private
-def sandbox_path
-  File.join(File.dirname(__FILE__), %w(tmp cookbooks cookbook))
-end
+task :default => :test
