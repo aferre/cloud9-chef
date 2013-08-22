@@ -43,7 +43,7 @@ namespace :test do
  
   desc 'Run Knife syntax checks'
   task :syntax  do
-    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME, '--config', '.knife.rb',
+    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME, '--config', 'test/.chef/knife.rb',
        '--cookbook-path', FIXTURES_PATH
   end
 
