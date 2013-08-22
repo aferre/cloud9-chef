@@ -43,8 +43,7 @@ namespace :test do
  
   desc 'Run Knife syntax checks'
   task :syntax  do
-    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME, '--config', 'test/.chef/knife.rb',
-       '--cookbook-path', FIXTURES_PATH
+    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME
   end
 
   desc 'Run minitest integration tests with Vagrant'

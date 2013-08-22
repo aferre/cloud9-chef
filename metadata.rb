@@ -1,5 +1,5 @@
 name             "cloud9"
-maintainer       "Adrien Ferré"
+maintainer       "Adrien Ferre"
 maintainer_email "ferre.adrien@gmail.com"
 license          "Apache 2.0"
 description      "Installs/Configures cloud9"

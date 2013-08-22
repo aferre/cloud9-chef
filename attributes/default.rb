@@ -8,3 +8,4 @@ default['cloud9']['nvm']['version'] = 'v0.8.25'
 default['nvm']['install_from_sources'] = false
 default['nvm']['alias_as_default'] = true
 default['nvm']['directory'] = '/home/vagrant/.nvm'
+default['cloud9']['test-repo'] = '/home/vagrant/chef-cloud9'
