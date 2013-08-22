@@ -22,18 +22,6 @@ require 'rubygems'
 require 'chef'
 require 'json'
 
-# Detect the version control system and assign to $vcs. Used by the update
-# task in chef_repo.rake (below). The install task calls update, so this
-# is run whenever the repo is installed.
-#
-# Comment out these lines to skip the update.
-
-if File.directory?(File.join(TOPDIR, ".svn"))
-  $vcs = :svn
-elsif File.directory?(File.join(TOPDIR, ".git"))
-  $vcs = :git
-end
-
 # Load common, useful tasks from Chef.
 # rake -T to see the tasks this loads.
 
