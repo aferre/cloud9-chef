@@ -1,3 +1,6 @@
+[![Build Status](https://travis-ci.org/aferre/cloud9-chef.png?branch=master)](https://travis-ci.org/aferre/cloud9-chef)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/aferre/cloud9-chef/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
 This directory contains the cookbooks used to configure systems in your infrastructure with Chef.
 
 Knife needs to be configured to know where the cookbooks are located with the `cookbook_path` setting. If this is not set, then several cookbook operations will fail to work properly.
@@ -54,5 +57,4 @@ If you're not using Git, use the site download subcommand to download the tarbal
 This creates the COOKBOOK.tar.gz from in the current directory (e.g., `~/chef-repo`). We recommend following a workflow similar to the above for your version control tool.
 
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/aferre/cloud9-chef/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
