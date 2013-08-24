@@ -10,7 +10,6 @@
     "ubuntu": ">= 0.0.0"
   },
   "dependencies": {
-    "nvm": ">= 0.0.0",
     "apt": ">= 0.0.0"
   },
   "recommendations": {
