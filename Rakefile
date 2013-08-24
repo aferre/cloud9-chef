@@ -66,11 +66,19 @@ namespace :test do
     sh ENV.fetch('INTEGRATION_TEARDOWN', 'vagrant halt --force')
   end
 
+  desc 'Run test-kitchen based tests'
+  task :test_kitchen do
+    sh 'kitchen', 'test'
+  end
+
   desc 'Run test:syntax, test:lint, test:spec, and test:integration'
   task :all => [:syntax, :integration, :integration_teardown]
+
+  desc 'Run test:syntax, test:test_kitchen'
+  task :sk => [:syntax, :test_kitchen]
 end
 
 # Aliases for backwards compatibility and convenience
-task :test => 'test:all'
+task :test => 'test:sk'
 
 task :default => :test
