@@ -21,6 +21,7 @@
 require 'rubygems'
 require 'chef'
 require 'json'
+require 'rake'
 
 def cookbook_metadata
   metadata = Chef::Cookbook::Metadata.new

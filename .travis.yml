@@ -3,7 +3,7 @@ gemfile:
    - Gemfile
 rvm:
   - "1.9.3"
-script: bundle exec rake test:syntax test:lint test:spec
+script: bundle exec rake test:sk
 before_install:
   - sudo apt-get install -y libxslt-dev
   - sudo gem install test-kitchen --pre
