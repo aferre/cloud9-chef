@@ -43,7 +43,7 @@ namespace :test do
  
   desc 'Run Knife syntax checks'
   task :syntax  do
-    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME
+    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME, '-c', 'test/knife.rb' , '-o', File.dirname(__FILE__)
   end
 
   desc 'Run minitest integration tests with Vagrant'
@@ -71,8 +71,8 @@ namespace :test do
     sh 'kitchen', 'test'
   end
 
-  desc 'Run test:syntax, test:lint, test:spec, and test:integration'
-  task :all => [:syntax, :integration, :integration_teardown]
+  #desc 'Run test:syntax, test:lint, test:spec, and test:integration'
+  #task :all => [:syntax, :integration, :integration_teardown]
 
   desc 'Run test:syntax, test:test_kitchen'
   task :sk => [:syntax, :test_kitchen]
