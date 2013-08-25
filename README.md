@@ -1,60 +1,90 @@
+Cloud9 Cookbook
+===============
+
 [![Build Status](https://travis-ci.org/aferre/cloud9-chef.png?branch=master)](https://travis-ci.org/aferre/cloud9-chef)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/aferre/cloud9-chef/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
-This directory contains the cookbooks used to configure systems in your infrastructure with Chef.
+Installs/Configures cloud9
 
-Knife needs to be configured to know where the cookbooks are located with the `cookbook_path` setting. If this is not set, then several cookbook operations will fail to work properly.
+Requirements
+------------
 
-    cookbook_path ["./cookbooks"]
+### Platform:
 
-This setting tells knife to look for the cookbooks directory in the present working directory. This means the knife cookbook subcommands need to be run in the `chef-repo` directory itself. To make sure that the cookbooks can be found elsewhere inside the repository, use an absolute path. This is a Ruby file, so something like the following can be used:
+* Debian
+* Ubuntu
 
-    current_dir = File.dirname(__FILE__)
-    cookbook_path ["#{current_dir}/../cookbooks"]
+### Cookbooks:
 
-Which will set `current_dir` to the location of the knife.rb file itself (e.g. `~/chef-repo/.chef/knife.rb`).
+* nvm
+* apt
 
-Configure knife to use your preferred copyright holder, email contact and license. Add the following lines to `.chef/knife.rb`.
+Attributes
+----------
 
-    cookbook_copyright "Example, Com."
-    cookbook_email     "cookbooks@example.com"
-    cookbook_license   "apachev2"
+<table>
+  <tr>
+    <td>Attribute</td>
+    <td>Description</td>
+    <td>Default</td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['directory']</code></td>
+    <td>The directory containing cloud9 sources</td>
+    <td><code>/home/vagrant/cloud9</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['repository']</code></td>
+    <td>The git repository containing cloud9 sources</td>
+    <td><code>https://github.com/ajaxorg/cloud9.git</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['reference']</code></td>
+    <td>The commit which should be checked out when cloning the cloud9 sources</td>
+    <td><code>ab693862647cbeb216734f795745e4c564258110</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['revision']</code></td>
+    <td>The branch name or tag which should be checked out when cloning the cloud9 sources</td>
+    <td><code>v2.0.93</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['user']</code></td>
+    <td>The user installing cloud9</td>
+    <td><code>vagrant</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['nvm']['version']</code></td>
+    <td>The node version installed by nvm</td>
+    <td><code>v0.8.25</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['test-repo']</code></td>
+    <td>The sources of the cloud9 cookbook, used to provide a simple example when provisionning a machine</td>
+    <td><code>/home/vagrant/chef-cloud9</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['repo']['repository']</code></td>
+    <td>The sources of the cloud9 cookbook, used to provide a simple example when provisionning a machine</td>
+    <td><code>https://github.com/aferre/cloud9-chef.git</code></td>
+  </tr>
+  <tr>
+    <td><code>node['cloud9']['repo']['directory']</code></td>
+    <td>The directory to clone the sources of the cloud9 cookbook into</td>
+    <td><code>/home/vagrant/chef-cloud9</code></td>
+  </tr>
+</table>
 
-Supported values for `cookbook_license` are "apachev2", "mit","gplv2","gplv3",  or "none". These settings are used to prefill comments in the default recipe, and the corresponding values in the metadata.rb. You are free to change the the comments in those files.
+Recipes
+-------
 
-Create new cookbooks in this directory with Knife.
+*No recipes defined*
 
-    knife cookbook create COOKBOOK
+License and Author
+------------------
 
-This will create all the cookbook directory components. You don't need to use them all, and can delete the ones you don't need. It also creates a README file, metadata.rb and default recipe.
+Author:: Adrien Ferre (<ferre.adrien@gmail.com>)
 
-You can also download cookbooks directly from the Opscode Cookbook Site. There are two subcommands to help with this depending on what your preference is.
+Copyright:: 2013, Adrien Ferre
 
-The first and recommended method is to use a vendor branch if you're using Git. This is automatically handled with Knife.
-
-    knife cookbook site install COOKBOOK
-
-This will:
-
-* Download the cookbook tarball from cookbooks.opscode.com.
-* Ensure its on the git master branch.
-* Checks for an existing vendor branch, and creates if it doesn't.
-* Checks out the vendor branch (chef-vendor-COOKBOOK).
-* Removes the existing (old) version.
-* Untars the cookbook tarball it downloaded in the first step.
-* Adds the cookbook files to the git index and commits.
-* Creates a tag for the version downloaded.
-* Checks out the master branch again.
-* Merges the cookbook into master.
-* Repeats the above for all the cookbooks dependencies, downloading them from the community site
-
-The last step will ensure that any local changes or modifications you have made to the cookbook are preserved, so you can keep your changes through upstream updates.
-
-If you're not using Git, use the site download subcommand to download the tarball.
-
-    knife cookbook site download COOKBOOK
-
-This creates the COOKBOOK.tar.gz from in the current directory (e.g., `~/chef-repo`). We recommend following a workflow similar to the above for your version control tool.
-
-
-
+License:: Apache 2.0

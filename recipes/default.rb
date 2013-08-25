@@ -74,7 +74,7 @@ git node['cloud9']['directory'] do
 end
 
 git node['cloud9']['test-repo'] do
-  repository "https://github.com/aferre/cloud9-chef.git"
+  repository node['cloud9']['repo']['repository']
   reference "master"
   ignore_failure false
   action :sync
