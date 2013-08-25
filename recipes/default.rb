@@ -73,8 +73,8 @@ git node['cloud9']['directory'] do
   user node['cloud9']['user']
 end
 
-git "/home/vagrant/chef-cloud9" do
-  repository "https://github.com/aferre/cloud9-chef.git"
+git node['cloud9']['test-repo'] do
+  repository node['cloud9']['repo']['repository']
   reference "master"
   ignore_failure false
   action :sync

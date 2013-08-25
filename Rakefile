@@ -21,48 +21,7 @@
 require 'rubygems'
 require 'chef'
 require 'json'
-
-# Load constants from rake config file.
-require File.join(File.dirname(__FILE__), 'config', 'rake')
-
-# Detect the version control system and assign to $vcs. Used by the update
-# task in chef_repo.rake (below). The install task calls update, so this
-# is run whenever the repo is installed.
-#
-# Comment out these lines to skip the update.
-
-if File.directory?(File.join(TOPDIR, ".svn"))
-  $vcs = :svn
-elsif File.directory?(File.join(TOPDIR, ".git"))
-  $vcs = :git
-end
-
-# Load common, useful tasks from Chef.
-# rake -T to see the tasks this loads.
-
-load 'chef/tasks/chef_repo.rake'
-
-desc "Bundle a single cookbook for distribution"
-task :bundle_cookbook => [ :metadata ]
-task :bundle_cookbook, :cookbook do |t, args|
-  tarball_name = "#{args.cookbook}.tar.gz"
-  temp_dir = File.join(Dir.tmpdir, "chef-upload-cookbooks")
-  temp_cookbook_dir = File.join(temp_dir, args.cookbook)
-  tarball_dir = File.join(TOPDIR, "pkgs")
-  FileUtils.mkdir_p(tarball_dir)
-  FileUtils.mkdir(temp_dir)
-  FileUtils.mkdir(temp_cookbook_dir)
-
-  child_folders = [ "cookbooks/#{args.cookbook}", "site-cookbooks/#{args.cookbook}" ]
-  child_folders.each do |folder|
-    file_path = File.join(TOPDIR, folder, ".")
-    FileUtils.cp_r(file_path, temp_cookbook_dir) if File.directory?(file_path)
-  end
-
-  system("tar", "-C", temp_dir, "-cvzf", File.join(tarball_dir, tarball_name), "./#{args.cookbook}")
-
-  FileUtils.rm_rf temp_dir
-end
+require 'rake'
 
 def cookbook_metadata
   metadata = Chef::Cookbook::Metadata.new
@@ -85,8 +44,7 @@ namespace :test do
  
   desc 'Run Knife syntax checks'
   task :syntax  do
-    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME, '--config', '.knife.rb',
-       '--cookbook-path', FIXTURES_PATH
+    sh 'knife', 'cookbook', 'test', COOKBOOK_NAME, '-c', 'test/knife.rb' , '-o', File.dirname(__FILE__)
   end
 
   desc 'Run minitest integration tests with Vagrant'
@@ -109,11 +67,19 @@ namespace :test do
     sh ENV.fetch('INTEGRATION_TEARDOWN', 'vagrant halt --force')
   end
 
-  desc 'Run test:syntax, test:lint, test:spec, and test:integration'
-  task :all => [:syntax, :integration, :integration_teardown]
+  desc 'Run test-kitchen based tests'
+  task :test_kitchen do
+    sh 'kitchen', 'test'
+  end
+
+  #desc 'Run test:syntax, test:lint, test:spec, and test:integration'
+  #task :all => [:syntax, :integration, :integration_teardown]
+
+  desc 'Run test:syntax, test:test_kitchen'
+  task :sk => [:syntax, :test_kitchen]
 end
 
 # Aliases for backwards compatibility and convenience
-task :test => 'test:all'
+task :test => 'test:sk'
 
 task :default => :test

@@ -1,10 +1,14 @@
 language: ruby
 gemfile:
-   - test/support/Gemfile
+   - Gemfile
 rvm:
-  - "1.9.2"
   - "1.9.3"
-script: bundle exec rake test:syntax test:lint test:spec
+script: bundle exec rake test:sk
+before_install:
+  - sudo apt-get install -y libxslt-dev virtualbox vagrant
+  - sudo gem install test-kitchen --pre
+  - sudo gem install kitchen-vagrant
+  - sudo gem install berkshelf
 notifications:
   email:
     - ferre.adrien@gmail.com
