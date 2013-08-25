@@ -5,6 +5,7 @@ rvm:
   - "1.9.3"
 script: bundle exec rake test:sk
 before_install:
+  - sudo apt-get update
   - sudo apt-get install --fix-missing -y libxslt-dev virtualbox vagrant 
   - sudo gem install test-kitchen --pre
   - sudo gem install kitchen-vagrant
