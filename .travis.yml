@@ -6,7 +6,8 @@ rvm:
 script: bundle exec rake test:sk
 before_install:
   - sudo apt-get update
-  - sudo apt-get install --fix-missing -y libxslt-dev virtualbox vagrant 
+  - cd /tmp && wget http://files.vagrantup.com/packages/7ec0ee1d00a916f80b109a298bab08e391945243/vagrant_1.2.7_i686.deb && dpkg -i vagrant_1.2.7_i686.deb
+  - sudo apt-get install --fix-missing -y libxslt-dev virtualbox 
   - sudo gem install test-kitchen --pre
   - sudo gem install kitchen-vagrant
   - sudo gem install berkshelf
