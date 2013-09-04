@@ -73,9 +73,9 @@ git node['cloud9']['directory'] do
   user node['cloud9']['user']
 end
 
-git node['cloud9']['test-repo'] do
-  repository node['cloud9']['repo']['repository']
-  reference "master"
+git node['cloud9-test-repo']['directory'] do
+  repository node['cloud9-test-repo']['repository']
+  revision node['cloud9-test-repo']['revision']
   ignore_failure false
   action :sync
   user node['cloud9']['user']
