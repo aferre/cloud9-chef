@@ -11,6 +11,7 @@ before_install:
   - sudo gem install test-kitchen --pre
   - sudo gem install kitchen-vagrant
   - sudo gem install berkshelf
+  - vagrant gem install berkshelf
 notifications:
   email:
     - ferre.adrien@gmail.com
